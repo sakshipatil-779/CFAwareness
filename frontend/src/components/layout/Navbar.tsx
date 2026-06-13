@@ -24,8 +24,8 @@ export default function Navbar() {
   }, []);
 
   // Close mobile menu on route change
-  // eslint-disable-next-line
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
   }, [location]);
 
