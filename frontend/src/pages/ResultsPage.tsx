@@ -279,7 +279,7 @@ export default function ResultsPage() {
   if (decisions.length === 0) return null;
 
   return (
-    <main id="main-content" className="page-container py-10">
+    <div className="page-container py-10">
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Grade hero */}
         <div className="glass-card animation-fill-both animate-fade-in p-8 text-center">
@@ -523,6 +523,6 @@ export default function ResultsPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

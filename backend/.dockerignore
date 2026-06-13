@@ -1,7 +1,5 @@
 node_modules
-src
-**/*.ts
-*.log
+dist
 .env
 .env.*
 !.env.example

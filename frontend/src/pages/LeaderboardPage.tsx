@@ -119,7 +119,7 @@ export default function LeaderboardPage() {
   const displayed = filter === 'personal' ? entries.filter((e) => e.isCurrentUser) : entries;
 
   return (
-    <main id="main-content" className="page-container py-10">
+    <div className="page-container py-10">
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -325,6 +325,6 @@ export default function LeaderboardPage() {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

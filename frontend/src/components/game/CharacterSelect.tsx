@@ -103,7 +103,6 @@ export default function CharacterSelect({ onSelect }: Props) {
             key={char.id}
             id={`char-${char.id}`}
             type="button"
-            role="listitem"
             aria-label={`Choose ${t(char.nameKey)} — ${t(char.descKey)}`}
             onClick={() => handleSelect(char.id)}
             className="glass-card animation-fill-both group animate-slide-up cursor-pointer p-6 text-left focus-visible:ring-2 focus-visible:ring-eco-500"

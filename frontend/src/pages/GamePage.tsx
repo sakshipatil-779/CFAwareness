@@ -89,30 +89,29 @@ export default function GamePage() {
 
   if (phase === 'awareness') {
     return (
-      <main
-        id="main-content"
+      <div
         className="min-h-screen"
         style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 50%, #f0fdfa 100%)' }}
       >
         <div className="page-container py-8">
           <AIVideoPlayer onComplete={handleAwarenessComplete} />
         </div>
-      </main>
+      </div>
     );
   }
 
   // ── Phase: Character Select ──────────────────────────────────────────────
   if (phase === 'character-select' || !state.isStarted) {
     return (
-      <main id="main-content">
+      <div className="w-full">
         <CharacterSelect onSelect={handleCharacterSelect} />
-      </main>
+      </div>
     );
   }
 
   // ── Phase: Playing / Animating ───────────────────────────────────────────
   return (
-    <main id="main-content">
+    <div className="w-full">
       {/* Sticky score bar */}
       <ScoreBar
         scenarioIndex={state.currentScenarioIndex}
@@ -187,6 +186,6 @@ export default function GamePage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

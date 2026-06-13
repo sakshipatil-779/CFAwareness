@@ -42,7 +42,7 @@ export default function HomePage() {
   const { t } = useLanguage();
 
   return (
-    <main id="main-content">
+    <div className="w-full">
       {/* ── HERO ── */}
       <section
         className="section relative overflow-hidden"
@@ -226,6 +226,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

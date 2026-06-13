@@ -67,7 +67,6 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
-                role="listitem"
                 className={({ isActive }) =>
                   `flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                     isActive
