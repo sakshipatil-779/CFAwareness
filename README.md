@@ -126,12 +126,12 @@ Run all unit and integration tests with a single command from the respective dir
 ### 11.1 Deploying Backend to Google Cloud Run
 1. Build and tag the Docker image using Google Cloud Build:
    ```bash
-   gcloud builds submit --tag gcr.io/your-project-id/ecoquest-backend
+   gcloud builds submit --tag gcr.io/sakshi-promptwar3/ecoquest-backend
    ```
 2. Deploy the container:
    ```bash
    gcloud run deploy ecoquest-backend \
-     --image gcr.io/your-project-id/ecoquest-backend \
+     --image gcr.io/sakshi-promptwar3/ecoquest-backend \
      --platform managed \
      --allow-unauthenticated \
      --region us-central1
