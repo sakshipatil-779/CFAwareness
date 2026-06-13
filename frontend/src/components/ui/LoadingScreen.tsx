@@ -18,23 +18,23 @@ export default function LoadingScreen() {
       <div className="relative mb-6 flex items-center justify-center">
         {/* Outer glow ring */}
         <div
-          className="absolute h-24 w-24 rounded-full animate-ping"
+          className="absolute h-24 w-24 animate-ping rounded-full"
           style={{ background: 'rgba(34, 197, 94, 0.15)' }}
           aria-hidden="true"
         />
         {/* Inner ring */}
         <div
-          className="absolute h-16 w-16 rounded-full animate-spin-slow"
+          className="absolute h-16 w-16 animate-spin-slow rounded-full"
           style={{ border: '2px solid transparent', borderTopColor: 'rgba(34, 197, 94, 0.6)' }}
           aria-hidden="true"
         />
         {/* Icon */}
-        <span className="relative text-4xl animate-bounce-eco" role="img" aria-hidden="true">
+        <span className="relative animate-bounce-eco text-4xl" role="img" aria-hidden="true">
           🌿
         </span>
       </div>
 
-      <p className="font-display text-xl font-bold gradient-text mb-2">EcoQuest</p>
+      <p className="gradient-text mb-2 font-display text-xl font-bold">EcoQuest</p>
       <p className="text-sm text-slate-500">{t('common.loading')}</p>
     </div>
   );

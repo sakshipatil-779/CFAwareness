@@ -20,23 +20,34 @@ export default function Footer() {
           {/* Brand */}
           <div className="flex items-center gap-2">
             <span aria-hidden="true">🌿</span>
-            <span className="font-display font-bold gradient-text">EcoQuest</span>
-            <span className="text-slate-400 text-sm">— Carbon Footprint Awareness Platform</span>
+            <span className="gradient-text font-display font-bold">EcoQuest</span>
+            <span className="text-sm text-slate-400">— Carbon Footprint Awareness Platform</span>
           </div>
 
           {/* Nav links */}
           <nav aria-label="Footer navigation">
-            <ul className="flex gap-4 text-sm text-slate-400" >
-              <li><Link to="/" className="hover:text-eco-600 transition-colors">{t('nav.home')}</Link></li>
-              <li><Link to="/game" className="hover:text-eco-600 transition-colors">{t('nav.game')}</Link></li>
-              <li><Link to="/leaderboard" className="hover:text-eco-600 transition-colors">{t('nav.leaderboard')}</Link></li>
+            <ul className="flex gap-4 text-sm text-slate-400">
+              <li>
+                <Link to="/" className="transition-colors hover:text-eco-600">
+                  {t('nav.home')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/game" className="transition-colors hover:text-eco-600">
+                  {t('nav.game')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/leaderboard" className="transition-colors hover:text-eco-600">
+                  {t('nav.leaderboard')}
+                </Link>
+              </li>
             </ul>
           </nav>
 
           {/* Copyright */}
           <p className="text-xs text-slate-400">
-            © {year} EcoQuest. Built on{' '}
-            <span className="text-eco-600">Google Cloud Platform</span>.
+            © {year} EcoQuest. Built on <span className="text-eco-600">Google Cloud Platform</span>.
           </p>
         </div>
       </div>

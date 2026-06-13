@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { UserProfile } from '@/types';
 
 // ---- Context ----
@@ -34,16 +28,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(JSON.parse(stored) as UserProfile);
     } else {
       const guest: UserProfile = {
-        uid:           `guest_${Math.random().toString(36).slice(2, 10)}`,
-        displayName:   'Eco Explorer',
-        email:         null,
-        photoURL:      null,
-        language:      'en',
+        uid: `guest_${Math.random().toString(36).slice(2, 10)}`,
+        displayName: 'Eco Explorer',
+        email: null,
+        photoURL: null,
+        language: 'en',
         totalEcoPoints: 0,
         totalCarbonSaved: 0,
-        gamesPlayed:   0,
-        createdAt:     Date.now(),
-        lastPlayedAt:  Date.now(),
+        gamesPlayed: 0,
+        createdAt: Date.now(),
+        lastPlayedAt: Date.now(),
       };
       sessionStorage.setItem('ecoquest_guest', JSON.stringify(guest));
       setUser(guest);

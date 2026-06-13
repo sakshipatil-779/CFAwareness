@@ -13,7 +13,16 @@ export interface LanguageOption {
 }
 
 // ----- Game -----
-export type ScenarioId = 'commute' | 'diet' | 'energy' | 'shopping' | 'heating' | 'water' | 'travel' | 'waste' | 'digital';
+export type ScenarioId =
+  | 'commute'
+  | 'diet'
+  | 'energy'
+  | 'shopping'
+  | 'heating'
+  | 'water'
+  | 'travel'
+  | 'waste'
+  | 'digital';
 
 export type ChoiceId = string;
 
@@ -105,7 +114,12 @@ export interface LeaderboardEntry {
   badge?: BadgeId;
 }
 
-export type BadgeId = 'eco-hero' | 'green-champion' | 'planet-saver' | 'climate-warrior' | 'new-leaf';
+export type BadgeId =
+  | 'eco-hero'
+  | 'green-champion'
+  | 'planet-saver'
+  | 'climate-warrior'
+  | 'new-leaf';
 
 // ----- AI Analysis -----
 export interface AnalysisRequest {

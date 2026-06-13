@@ -16,7 +16,10 @@ import AIVideoPlayer from '@components/game/AIVideoPlayer';
 type GamePhase = 'awareness' | 'character-select' | 'playing' | 'animating';
 
 const CHAR_AVATARS: Record<CharacterId, string> = {
-  alex: '🧑🏽‍💼', maya: '👩🏻', riya: '👩🏾', carlos: '👨🏽',
+  alex: '🧑🏽‍💼',
+  maya: '👩🏻',
+  riya: '👩🏾',
+  carlos: '👨🏽',
 };
 
 export default function GamePage() {
@@ -39,18 +42,24 @@ export default function GamePage() {
   }, []);
 
   // ── 2. Character selected ────────────────────────────────────────────────
-  const handleCharacterSelect = useCallback((characterId: CharacterId) => {
-    startGame(characterId, user?.uid ?? null);
-    setPhase('playing');
-  }, [startGame, user]);
+  const handleCharacterSelect = useCallback(
+    (characterId: CharacterId) => {
+      startGame(characterId, user?.uid ?? null);
+      setPhase('playing');
+    },
+    [startGame, user],
+  );
 
   // ── 3. Choice made ───────────────────────────────────────────────────────
-  const handleChoice = useCallback((choice: Choice) => {
-    if (!currentScenario) return;
-    setSelectedChoice(choice);
-    makeDecision(currentScenario.id, choice.id, choice.ecoPoints, choice.carbonSaved);
-    setTimeout(() => setPhase('animating'), 350);
-  }, [currentScenario, makeDecision]);
+  const handleChoice = useCallback(
+    (choice: Choice) => {
+      if (!currentScenario) return;
+      setSelectedChoice(choice);
+      makeDecision(currentScenario.id, choice.id, choice.ecoPoints, choice.carbonSaved);
+      setTimeout(() => setPhase('animating'), 350);
+    },
+    [currentScenario, makeDecision],
+  );
 
   // ── 4. Animation complete ────────────────────────────────────────────────
   const handleAnimationComplete = useCallback(() => {
@@ -64,7 +73,9 @@ export default function GamePage() {
         totalCarbonSaved: state.totalCarbonSaved + (selectedChoice?.carbonSaved ?? 0),
         timestamp: Date.now(),
       };
-      const stored = JSON.parse(localStorage.getItem('ecoquest_scores') ?? '[]') as typeof entry[];
+      const stored = JSON.parse(
+        localStorage.getItem('ecoquest_scores') ?? '[]',
+      ) as (typeof entry)[];
       stored.unshift(entry);
       localStorage.setItem('ecoquest_scores', JSON.stringify(stored.slice(0, 50)));
       navigate('/results', {
@@ -78,7 +89,11 @@ export default function GamePage() {
 
   if (phase === 'awareness') {
     return (
-      <main id="main-content" className="min-h-screen" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 50%, #f0fdfa 100%)' }}>
+      <main
+        id="main-content"
+        className="min-h-screen"
+        style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 50%, #f0fdfa 100%)' }}
+      >
         <div className="page-container py-8">
           <AIVideoPlayer onComplete={handleAwarenessComplete} />
         </div>
@@ -128,27 +143,33 @@ export default function GamePage() {
         <div className="page-container py-8">
           <div className="mx-auto max-w-2xl">
             {/* Scenario header */}
-            <div className="mb-8 text-center animate-fade-in animation-fill-both">
+            <div className="animation-fill-both mb-8 animate-fade-in text-center">
               <div className="eco-badge mb-4 justify-center">
                 <span aria-hidden="true">📍</span>
                 {t('game.scenario')} {state.currentScenarioIndex + 1} of {scenarios.length}
               </div>
 
-              <h1 className="mb-3 font-display text-3xl font-extrabold gradient-text">
+              <h1 className="gradient-text mb-3 font-display text-3xl font-extrabold">
                 {t(currentScenario.titleKey)}
               </h1>
 
-              <p className="text-slate-500 text-lg leading-relaxed">
+              <p className="text-lg leading-relaxed text-slate-500">
                 {t(currentScenario.descriptionKey)}
               </p>
 
               {/* Choice icons preview */}
               <div className="mt-6 flex items-center justify-center gap-4" aria-hidden="true">
-                <div className="h-px flex-1 rounded" style={{ background: 'linear-gradient(90deg, transparent, rgba(34,197,94,0.2))' }} />
+                <div
+                  className="h-px flex-1 rounded"
+                  style={{ background: 'linear-gradient(90deg, transparent, rgba(34,197,94,0.2))' }}
+                />
                 <div className="glass-card-light px-6 py-3 text-3xl tracking-widest">
                   {currentScenario.choices.map((c) => c.icon).join(' ')}
                 </div>
-                <div className="h-px flex-1 rounded" style={{ background: 'linear-gradient(90deg, rgba(34,197,94,0.2), transparent)' }} />
+                <div
+                  className="h-px flex-1 rounded"
+                  style={{ background: 'linear-gradient(90deg, rgba(34,197,94,0.2), transparent)' }}
+                />
               </div>
             </div>
 
@@ -160,10 +181,8 @@ export default function GamePage() {
             />
 
             {/* Eco tip */}
-            <div className="mt-6 glass-card p-4 text-center">
-              <p className="text-sm text-slate-500">
-                💡 {t('game.tip')}
-              </p>
+            <div className="glass-card mt-6 p-4 text-center">
+              <p className="text-sm text-slate-500">💡 {t('game.tip')}</p>
             </div>
           </div>
         </div>

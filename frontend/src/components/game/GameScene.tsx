@@ -11,7 +11,10 @@ interface Props {
 }
 
 const CHARACTER_EMOJI: Record<CharacterId, string> = {
-  alex: '🧑🏽‍💼', maya: '👩🏻', riya: '👩🏾', carlos: '👨🏽',
+  alex: '🧑🏽‍💼',
+  maya: '👩🏻',
+  riya: '👩🏾',
+  carlos: '👨🏽',
 };
 
 interface SceneConfig {
@@ -139,12 +142,12 @@ const SCENE_CONFIG: Record<AnimationType, SceneConfig> = {
 function PointsParticle({ points }: { points: number }) {
   return (
     <div
-      className="points-pop absolute top-1/3 left-1/2 -translate-x-1/2 z-20 select-none pointer-events-none"
+      className="points-pop pointer-events-none absolute left-1/2 top-1/3 z-20 -translate-x-1/2 select-none"
       aria-live="polite"
       aria-label={`+${points} eco-points`}
     >
       <div
-        className="font-display font-black text-4xl"
+        className="font-display text-4xl font-black"
         style={{
           color: '#15803d',
           textShadow: '0 2px 10px rgba(34,197,94,0.4)',
@@ -153,7 +156,7 @@ function PointsParticle({ points }: { points: number }) {
       >
         +{points}
       </div>
-      <div className="text-center text-sm font-semibold text-eco-600 mt-1">Eco-Points!</div>
+      <div className="mt-1 text-center text-sm font-semibold text-eco-600">Eco-Points!</div>
     </div>
   );
 }
@@ -184,9 +187,11 @@ export default function GameScene({ animationType, characterId, ecoPoints, onCom
     >
       {/* Scrolling background elements */}
       <div className="scene-elements absolute inset-0 flex items-center" style={{ top: '15%' }}>
-        <div className="scene-scroll text-3xl gap-12 flex items-center" style={{ gap: '3rem' }}>
+        <div className="scene-scroll flex items-center gap-12 text-3xl" style={{ gap: '3rem' }}>
           {[...scene.elements, ...scene.elements].map((el, i) => (
-            <span key={i} aria-hidden="true">{el}</span>
+            <span key={i} aria-hidden="true">
+              {el}
+            </span>
           ))}
         </div>
       </div>
@@ -206,21 +211,26 @@ export default function GameScene({ animationType, characterId, ecoPoints, onCom
       {/* Road markings for vehicle scenes */}
       {['cycling', 'walking', 'bus', 'metro', 'car'].includes(animationType) && (
         <div
-          className="absolute bottom-[9%] left-0 right-0 h-[4px] scene-road-line"
+          className="scene-road-line absolute bottom-[9%] left-0 right-0 h-[4px]"
           aria-hidden="true"
         />
       )}
 
       {/* Animated character/vehicle */}
-      <div
-        className="scene-character"
-        style={{ bottom: '24%' }}
-        aria-hidden="true"
-      >
+      <div className="scene-character" style={{ bottom: '24%' }} aria-hidden="true">
         <span className="inline-block animate-bounce-eco">{charEmoji}</span>
-        {scene.vehicleEmoji !== charEmoji && !['plant-based','vegetarian','omnivore','solar','efficient','standard','idle'].includes(animationType) && (
-          <span className="inline-block ml-1 text-3xl">{scene.vehicleEmoji}</span>
-        )}
+        {scene.vehicleEmoji !== charEmoji &&
+          ![
+            'plant-based',
+            'vegetarian',
+            'omnivore',
+            'solar',
+            'efficient',
+            'standard',
+            'idle',
+          ].includes(animationType) && (
+            <span className="ml-1 inline-block text-3xl">{scene.vehicleEmoji}</span>
+          )}
       </div>
 
       {/* Points particle */}
@@ -255,8 +265,11 @@ export default function GameScene({ animationType, characterId, ecoPoints, onCom
       {/* Ambient light overlay for eco scenes */}
       {scene.isEco && (
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(34,197,94,0.08) 0%, transparent 70%)' }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 30%, rgba(34,197,94,0.08) 0%, transparent 70%)',
+          }}
           aria-hidden="true"
         />
       )}

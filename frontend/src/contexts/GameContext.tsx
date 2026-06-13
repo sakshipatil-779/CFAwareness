@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import {
-  createContext,
-  useContext,
-  useReducer,
-  useCallback,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useReducer, useCallback, type ReactNode } from 'react';
 import type { GameState, GameDecision, CharacterId, ScenarioId, Scenario } from '@/types';
 import { calculateTotalEcoPoints, calculateTotalCarbonSaved } from '@/utils/scoreUtils';
 import { pickRandomScenarios } from '@/data/scenarios';
@@ -30,7 +24,10 @@ const initialState: ExtendedGameState = {
 
 // ── Actions ───────────────────────────────────────────────────────────────
 type GameAction =
-  | { type: 'START_GAME'; payload: { characterId: CharacterId; userId: string | null; scenarios: Scenario[] } }
+  | {
+      type: 'START_GAME';
+      payload: { characterId: CharacterId; userId: string | null; scenarios: Scenario[] };
+    }
   | { type: 'MAKE_DECISION'; payload: Omit<GameDecision, 'timestamp'> }
   | { type: 'NEXT_SCENARIO' }
   | { type: 'COMPLETE_GAME' }
@@ -77,7 +74,12 @@ function gameReducer(state: ExtendedGameState, action: GameAction): ExtendedGame
 interface GameContextValue {
   state: ExtendedGameState;
   startGame: (characterId: CharacterId, userId?: string | null) => void;
-  makeDecision: (scenarioId: ScenarioId, choiceId: string, ecoPoints: number, carbonSaved: number) => void;
+  makeDecision: (
+    scenarioId: ScenarioId,
+    choiceId: string,
+    ecoPoints: number,
+    carbonSaved: number,
+  ) => void;
   nextScenario: () => void;
   completeGame: () => void;
   resetGame: () => void;
@@ -97,17 +99,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const makeDecision = useCallback(
     (scenarioId: ScenarioId, choiceId: string, ecoPoints: number, carbonSaved: number) => {
-      dispatch({ type: 'MAKE_DECISION', payload: { scenarioId, choiceId, ecoPoints, carbonSaved } });
+      dispatch({
+        type: 'MAKE_DECISION',
+        payload: { scenarioId, choiceId, ecoPoints, carbonSaved },
+      });
     },
     [],
   );
 
   const nextScenario = useCallback(() => dispatch({ type: 'NEXT_SCENARIO' }), []);
   const completeGame = useCallback(() => dispatch({ type: 'COMPLETE_GAME' }), []);
-  const resetGame    = useCallback(() => dispatch({ type: 'RESET_GAME' }),    []);
+  const resetGame = useCallback(() => dispatch({ type: 'RESET_GAME' }), []);
 
   return (
-    <GameContext.Provider value={{ state, startGame, makeDecision, nextScenario, completeGame, resetGame }}>
+    <GameContext.Provider
+      value={{ state, startGame, makeDecision, nextScenario, completeGame, resetGame }}
+    >
       {children}
     </GameContext.Provider>
   );

@@ -64,36 +64,38 @@ const CHARACTERS: CharacterData[] = [
 export default function CharacterSelect({ onSelect }: Props) {
   const { t } = useLanguage();
 
-  const handleSelect = useCallback((id: CharacterId) => {
-    onSelect(id);
-  }, [onSelect]);
+  const handleSelect = useCallback(
+    (id: CharacterId) => {
+      onSelect(id);
+    },
+    [onSelect],
+  );
 
   return (
     <section
-      className="min-h-[80vh] flex flex-col items-center justify-center page-container py-12"
+      className="page-container flex min-h-[80vh] flex-col items-center justify-center py-12"
       aria-labelledby="char-select-heading"
     >
       {/* Header */}
-      <div className="mb-10 text-center animate-fade-in animation-fill-both">
+      <div className="animation-fill-both mb-10 animate-fade-in text-center">
         <div className="eco-badge mb-5 justify-center">
           <span aria-hidden="true">🌿</span>
           EcoQuest — Choose Your Hero
         </div>
         <h1
           id="char-select-heading"
-          className="font-display text-4xl font-extrabold gradient-text mb-3"
+          className="gradient-text mb-3 font-display text-4xl font-extrabold"
         >
           {t('game.choose_char')}
         </h1>
-        <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed">
+        <p className="mx-auto max-w-md text-lg leading-relaxed text-slate-500">
           Each character brings a unique perspective to living sustainably. Who are you?
         </p>
       </div>
 
       {/* Character cards grid */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full max-w-5xl"
-        
+        className="grid w-full max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
         aria-label="Choose your character"
       >
         {CHARACTERS.map((char, i) => (
@@ -104,7 +106,7 @@ export default function CharacterSelect({ onSelect }: Props) {
             role="listitem"
             aria-label={`Choose ${t(char.nameKey)} — ${t(char.descKey)}`}
             onClick={() => handleSelect(char.id)}
-            className="group glass-card p-6 text-left cursor-pointer focus-visible:ring-2 focus-visible:ring-eco-500 animate-slide-up animation-fill-both"
+            className="glass-card animation-fill-both group animate-slide-up cursor-pointer p-6 text-left focus-visible:ring-2 focus-visible:ring-eco-500"
             style={{
               animationDelay: `${i * 80}ms`,
               border: `1.5px solid ${char.border}`,
@@ -112,7 +114,7 @@ export default function CharacterSelect({ onSelect }: Props) {
           >
             {/* Avatar */}
             <div
-              className="flex items-center justify-center mb-4 rounded-2xl text-5xl"
+              className="mb-4 flex items-center justify-center rounded-2xl text-5xl"
               style={{
                 height: 80,
                 background: char.accentLight,
@@ -121,24 +123,19 @@ export default function CharacterSelect({ onSelect }: Props) {
               }}
               aria-hidden="true"
             >
-              <span
-                className="group-hover:scale-110 group-hover:animate-bounce-eco inline-block transition-transform duration-200"
-              >
+              <span className="inline-block transition-transform duration-200 group-hover:scale-110 group-hover:animate-bounce-eco">
                 {char.avatar}
               </span>
             </div>
 
             {/* Name */}
-            <h2
-              className="font-display text-lg font-bold mb-1"
-              style={{ color: char.accent }}
-            >
+            <h2 className="mb-1 font-display text-lg font-bold" style={{ color: char.accent }}>
               {t(char.nameKey)}
             </h2>
 
             {/* Tagline chip */}
             <span
-              className="chip text-xs mb-2 inline-block"
+              className="chip mb-2 inline-block text-xs"
               style={{
                 background: char.accentLight,
                 color: char.accent,
@@ -149,9 +146,7 @@ export default function CharacterSelect({ onSelect }: Props) {
             </span>
 
             {/* Description */}
-            <p className="text-sm text-slate-500 leading-relaxed">
-              {t(char.descKey)}
-            </p>
+            <p className="text-sm leading-relaxed text-slate-500">{t(char.descKey)}</p>
 
             {/* Select CTA */}
             <div
@@ -163,7 +158,7 @@ export default function CharacterSelect({ onSelect }: Props) {
               }}
               aria-hidden="true"
             >
-              <span className="group-hover:tracking-wider transition-all duration-200">
+              <span className="transition-all duration-200 group-hover:tracking-wider">
                 Select →
               </span>
             </div>
@@ -173,10 +168,18 @@ export default function CharacterSelect({ onSelect }: Props) {
 
       {/* Ambient glow orbs */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="glow-orb top-1/4 left-1/4 h-80 w-80"
-          style={{ background: 'radial-gradient(ellipse, rgba(34,197,94,0.07) 0%, transparent 70%)' }} />
-        <div className="glow-orb bottom-1/4 right-1/4 h-80 w-80"
-          style={{ background: 'radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 70%)' }} />
+        <div
+          className="glow-orb left-1/4 top-1/4 h-80 w-80"
+          style={{
+            background: 'radial-gradient(ellipse, rgba(34,197,94,0.07) 0%, transparent 70%)',
+          }}
+        />
+        <div
+          className="glow-orb bottom-1/4 right-1/4 h-80 w-80"
+          style={{
+            background: 'radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 70%)',
+          }}
+        />
       </div>
     </section>
   );

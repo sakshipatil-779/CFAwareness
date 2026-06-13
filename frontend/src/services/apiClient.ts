@@ -48,7 +48,7 @@ async function request<T>(
 }
 
 export const apiClient = {
-  get:  <T>(endpoint: string, init?: RequestInit) =>
+  get: <T>(endpoint: string, init?: RequestInit) =>
     request<T>(endpoint, { method: 'GET', ...init }),
 
   post: <T>(endpoint: string, body: unknown, init?: RequestInit) =>

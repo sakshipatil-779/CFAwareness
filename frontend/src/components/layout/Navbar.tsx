@@ -25,13 +25,15 @@ export default function Navbar() {
 
   // Close mobile menu on route change
   // eslint-disable-next-line
-  useEffect(() => { setMobileOpen(false); }, [location]);
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location]);
 
   const currentLang = LANGUAGE_OPTIONS.find((l) => l.code === language)!;
 
   const navLinks = [
-    { to: '/',            label: t('nav.home'),        icon: '🏠' },
-    { to: '/game',        label: t('nav.game'),        icon: '🎮' },
+    { to: '/', label: t('nav.home'), icon: '🏠' },
+    { to: '/game', label: t('nav.game'), icon: '🎮' },
     { to: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
   ];
 
@@ -39,11 +41,10 @@ export default function Navbar() {
     <header className="navbar-glass sticky top-0 z-40" role="banner">
       <div className="page-container">
         <nav className="flex h-16 items-center justify-between" aria-label="Main navigation">
-
           {/* Brand */}
           <Link
             to="/"
-            className="flex items-center gap-2 font-display font-extrabold text-xl"
+            className="flex items-center gap-2 font-display text-xl font-extrabold"
             aria-label="EcoQuest Home"
           >
             <span
@@ -60,7 +61,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden md:flex items-center gap-1" >
+          <div className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
@@ -68,10 +69,10 @@ export default function Navbar() {
                 end={link.to === '/'}
                 role="listitem"
                 className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  `flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                     isActive
-                      ? 'bg-eco-50 text-eco-700 border border-eco-200 shadow-sm'
-                      : 'text-slate-500 hover:text-eco-600 hover:bg-eco-50/60'
+                      ? 'border border-eco-200 bg-eco-50 text-eco-700 shadow-sm'
+                      : 'text-slate-500 hover:bg-eco-50/60 hover:text-eco-600'
                   }`
                 }
               >
@@ -83,7 +84,6 @@ export default function Navbar() {
 
           {/* Right: Language + mobile toggle */}
           <div className="flex items-center gap-2">
-
             {/* Language dropdown */}
             <div className="relative" ref={langRef}>
               <button
@@ -99,40 +99,56 @@ export default function Navbar() {
                 <span className="hidden sm:inline">{currentLang?.nativeLabel}</span>
                 <svg
                   className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`}
-                  viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
                 >
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
 
               {/* Dropdown panel */}
               {langOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-52 rounded-2xl shadow-glass-lg overflow-hidden z-50 animate-slide-down animation-fill-both"
-                  style={{ background: 'rgba(255,255,255,0.97)', border: '1px solid rgba(34,197,94,0.15)' }}
+                  className="animation-fill-both absolute right-0 z-50 mt-2 w-52 animate-slide-down overflow-hidden rounded-2xl shadow-glass-lg"
+                  style={{
+                    background: 'rgba(255,255,255,0.97)',
+                    border: '1px solid rgba(34,197,94,0.15)',
+                  }}
                   role="listbox"
                   aria-label="Select language"
                 >
                   {/* Scrollable container for 9 languages */}
-                  <div className="max-h-72 overflow-y-auto py-1.5 no-scrollbar">
+                  <div className="no-scrollbar max-h-72 overflow-y-auto py-1.5">
                     {LANGUAGE_OPTIONS.map((opt) => (
                       <button
                         key={opt.code}
                         role="option"
                         aria-selected={language === opt.code}
                         type="button"
-                        onClick={() => { setLanguage(opt.code); setLangOpen(false); }}
+                        onClick={() => {
+                          setLanguage(opt.code);
+                          setLangOpen(false);
+                        }}
                         className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-150 ${
                           language === opt.code
-                            ? 'bg-eco-50 text-eco-700 font-semibold'
+                            ? 'bg-eco-50 font-semibold text-eco-700'
                             : 'text-slate-600 hover:bg-slate-50'
                         }`}
                       >
-                        <span className="text-base" aria-hidden="true">{opt.flag}</span>
+                        <span className="text-base" aria-hidden="true">
+                          {opt.flag}
+                        </span>
                         <span className="flex-1 text-left">{opt.nativeLabel}</span>
                         <span className="text-xs text-slate-400">{opt.label}</span>
                         {language === opt.code && (
-                          <span className="text-eco-500" aria-hidden="true">✓</span>
+                          <span className="text-eco-500" aria-hidden="true">
+                            ✓
+                          </span>
                         )}
                       </button>
                     ))}
@@ -145,7 +161,7 @@ export default function Navbar() {
             <button
               type="button"
               id="mobile-menu-toggle"
-              className="flex md:hidden items-center justify-center h-9 w-9 rounded-xl border border-slate-200 bg-white/80 text-slate-500 transition-colors hover:border-eco-300 hover:text-eco-600"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-500 transition-colors hover:border-eco-300 hover:text-eco-600 md:hidden"
               onClick={() => setMobileOpen((o) => !o)}
               aria-expanded={mobileOpen}
               aria-label="Toggle mobile menu"
@@ -156,7 +172,11 @@ export default function Navbar() {
                 </svg>
               ) : (
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               )}
             </button>
@@ -166,7 +186,7 @@ export default function Navbar() {
         {/* Mobile menu */}
         {mobileOpen && (
           <div
-            className="md:hidden border-t pb-3 pt-2 animate-slide-down animation-fill-both"
+            className="animation-fill-both animate-slide-down border-t pb-3 pt-2 md:hidden"
             style={{ borderColor: 'rgba(34,197,94,0.12)' }}
             role="navigation"
             aria-label="Mobile navigation"
@@ -177,7 +197,7 @@ export default function Navbar() {
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl mx-1 my-0.5 transition-all ${
+                  `mx-1 my-0.5 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
                     isActive
                       ? 'bg-eco-50 text-eco-700'
                       : 'text-slate-500 hover:bg-slate-50 hover:text-eco-600'

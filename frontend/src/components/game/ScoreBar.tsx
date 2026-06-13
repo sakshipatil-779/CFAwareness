@@ -8,9 +8,14 @@ interface Props {
   characterAvatar: string;
 }
 
-export default React.memo(function ScoreBar({ scenarioIndex, totalScenarios = 3, totalEcoPoints, characterAvatar }: Props) {
+export default React.memo(function ScoreBar({
+  scenarioIndex,
+  totalScenarios = 3,
+  totalEcoPoints,
+  characterAvatar,
+}: Props) {
   const { t } = useLanguage();
-  const progressPct = Math.round(((scenarioIndex) / totalScenarios) * 100);
+  const progressPct = Math.round((scenarioIndex / totalScenarios) * 100);
 
   return (
     <div
@@ -26,7 +31,6 @@ export default React.memo(function ScoreBar({ scenarioIndex, totalScenarios = 3,
     >
       <div className="page-container py-3">
         <div className="flex items-center gap-4">
-
           {/* Character avatar */}
           <div
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xl"
@@ -41,14 +45,14 @@ export default React.memo(function ScoreBar({ scenarioIndex, totalScenarios = 3,
 
           {/* Progress bar + label */}
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="mb-1.5 flex items-center justify-between">
               <span className="text-xs font-semibold text-slate-500">
                 {t('game.scenario')} {scenarioIndex + 1} / {totalScenarios}
               </span>
               <span className="text-xs text-slate-400">{progressPct}%</span>
             </div>
             <div
-              className="h-2 rounded-full overflow-hidden"
+              className="h-2 overflow-hidden rounded-full"
               style={{ background: 'rgba(34,197,94,0.12)' }}
               role="progressbar"
               aria-valuenow={progressPct}
@@ -68,10 +72,9 @@ export default React.memo(function ScoreBar({ scenarioIndex, totalScenarios = 3,
           {/* Eco-points badge */}
           <div className="score-pill shrink-0" aria-live="polite">
             <span aria-hidden="true">🌿</span>
-            <span className="font-display font-extrabold text-base">{totalEcoPoints}</span>
-            <span className="text-xs text-eco-700 hidden sm:inline">{t('game.eco_points')}</span>
+            <span className="font-display text-base font-extrabold">{totalEcoPoints}</span>
+            <span className="hidden text-xs text-eco-700 sm:inline">{t('game.eco_points')}</span>
           </div>
-
         </div>
       </div>
     </div>

@@ -22,14 +22,17 @@ function getTier(ecoPoints: number, allPoints: number[]): Tier {
   return 'poor';
 }
 
-const TIER_STYLES: Record<Tier, {
-  label: string;
-  bg: string;
-  border: string;
-  chipBg: string;
-  chipColor: string;
-  glowColor: string;
-}> = {
+const TIER_STYLES: Record<
+  Tier,
+  {
+    label: string;
+    bg: string;
+    border: string;
+    chipBg: string;
+    chipColor: string;
+    glowColor: string;
+  }
+> = {
   best: {
     label: '⭐ Best',
     bg: 'rgba(240,253,244,0.85)',
@@ -69,12 +72,8 @@ export default React.memo(function ChoicePanel({ choices, onChoose, selectedId }
   const allPoints = choices.map((c) => c.ecoPoints);
 
   return (
-    <div
-      role="group"
-      aria-label={t('game.choose')}
-      className="space-y-3"
-    >
-      <p className="text-center text-sm font-semibold text-slate-400 uppercase tracking-widest mb-5">
+    <div role="group" aria-label={t('game.choose')} className="space-y-3">
+      <p className="mb-5 text-center text-sm font-semibold uppercase tracking-widest text-slate-400">
         {t('game.choose')}
       </p>
 
@@ -93,10 +92,7 @@ export default React.memo(function ChoicePanel({ choices, onChoose, selectedId }
             disabled={isDisabled}
             aria-pressed={isSelected}
             aria-label={`${t(choice.labelKey)}: ${t(choice.descriptionKey)} — ${choice.ecoPoints} eco-points`}
-            className={`w-full text-left rounded-2xl p-4 transition-all duration-200 animate-slide-up animation-fill-both
-              ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:-translate-y-0.5'}
-              ${isSelected ? 'ring-2 ring-eco-400 scale-[1.01]' : ''}
-            `}
+            className={`animation-fill-both w-full animate-slide-up rounded-2xl p-4 text-left transition-all duration-200 ${isDisabled ? 'cursor-not-allowed opacity-40' : 'cursor-pointer hover:-translate-y-0.5'} ${isSelected ? 'scale-[1.01] ring-2 ring-eco-400' : ''} `}
             style={{
               animationDelay: `${i * 60}ms`,
               background: isSelected
@@ -120,36 +116,45 @@ export default React.memo(function ChoicePanel({ choices, onChoose, selectedId }
               </div>
 
               {/* Text */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-display font-bold text-slate-800 text-base">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-display text-base font-bold text-slate-800">
                     {t(choice.labelKey)}
                   </span>
                   {/* Tier chip */}
                   <span
-                    className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                    className="rounded-full px-2 py-0.5 text-xs font-semibold"
                     style={{ background: styles.chipBg, color: styles.chipColor }}
                     aria-label={`Quality tier: ${tier}`}
                   >
                     {styles.label}
                   </span>
                 </div>
-                <p className="text-sm text-slate-500 mt-0.5 leading-snug">
+                <p className="mt-0.5 text-sm leading-snug text-slate-500">
                   {t(choice.descriptionKey)}
                 </p>
               </div>
 
               {/* Points */}
-              <div className="text-right shrink-0">
+              <div className="shrink-0 text-right">
                 <p
-                  className="font-display font-extrabold text-lg leading-none"
-                  style={{ color: tier === 'best' ? '#15803d' : tier === 'good' ? '#0369a1' : tier === 'fair' ? '#b45309' : '#be123c' }}
+                  className="font-display text-lg font-extrabold leading-none"
+                  style={{
+                    color:
+                      tier === 'best'
+                        ? '#15803d'
+                        : tier === 'good'
+                          ? '#0369a1'
+                          : tier === 'fair'
+                            ? '#b45309'
+                            : '#be123c',
+                  }}
                 >
                   +{choice.ecoPoints}
                 </p>
-                <p className="text-xs text-slate-400 mt-0.5">pts</p>
+                <p className="mt-0.5 text-xs text-slate-400">pts</p>
                 {choice.carbonSaved > 0 && (
-                  <p className="text-xs mt-1 font-medium" style={{ color: '#0d9488' }}>
+                  <p className="mt-1 text-xs font-medium" style={{ color: '#0d9488' }}>
                     -{choice.carbonSaved.toFixed(1)}kg CO₂
                   </p>
                 )}
