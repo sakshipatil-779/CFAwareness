@@ -7,9 +7,7 @@
     "types": ["vite/client", "node"],
     "skipLibCheck": true,
 
-    /* Path aliases — baseUrl + ignoreDeprecations required for TS ≥ 6 paths resolution */
-    "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+    /* Path aliases — resolved relative to the tsconfig file location */
     "paths": {
       "@/*":            ["./src/*"],
       "@components/*":  ["./src/components/*"],

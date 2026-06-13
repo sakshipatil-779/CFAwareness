@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React from 'react';
 import { useLanguage } from '@contexts/LanguageContext';
 import type { Choice } from '@/types';
 
