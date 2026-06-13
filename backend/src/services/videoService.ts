@@ -19,7 +19,7 @@
 
 import { Storage } from '@google-cloud/storage';
 import { TextToSpeechClient } from '@google-cloud/text-to-speech';
-import { GoogleGenAI, type Blob as GenAIBlob } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import { getScript, type VideoTopic, type SupportedLanguage } from '../data/videoScripts';
 import { selectVeoPrompt } from '../data/videoPrompts';
 
@@ -213,8 +213,8 @@ async function generateVeoVideo(
 
   try {
     // Submit generation request — returns a long-running operation
-    // @ts-expect-error: generateVideos is not yet typed on models in the current @google/genai version
-    let operation = await genAI.models.generateVideos({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let operation: any = await (genAI.models as any).generateVideos({
       model: VEO_MODEL,
       prompt: veoPrompt.text,
       config: {
@@ -223,7 +223,7 @@ async function generateVeoVideo(
         resolution: '1080p',
         numberOfVideos: 1,
         generateAudio: false, // We supply our own TTS audio
-        compressionQuality: 'best',
+        compressionQuality: 'best' as any,
       },
     });
 
@@ -239,7 +239,8 @@ async function generateVeoVideo(
       console.log(`[videoService] Veo: polling… done=${operation.done}`);
     }
 
-    const generatedVideos: GenAIBlob[] = operation.response?.generatedVideos ?? [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const generatedVideos: any[] = operation.response?.generatedVideos ?? [];
     if (generatedVideos.length === 0) {
       console.error('[videoService] Veo: no videos in response');
       return fallback;
@@ -247,7 +248,6 @@ async function generateVeoVideo(
 
     const videoBytes = generatedVideos[0];
     const videoBuffer = Buffer.from(
-      // @ts-expect-error: GenAIBlob might have a data field that is not exposed in the exported type
       typeof videoBytes === 'string' ? videoBytes : videoBytes.data ?? videoBytes,
       'base64',
     );
