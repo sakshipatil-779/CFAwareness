@@ -1,0 +1,194 @@
+name: EcoQuest CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────
+  # Job 1: Lint (frontend + backend)
+  # ─────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
+
+      - name: Install frontend deps
+        run: npm ci
+        working-directory: frontend
+
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: frontend
+
+      - name: Check frontend formatting
+        run: npx prettier --check "src/**/*.{ts,tsx,css}"
+        working-directory: frontend
+
+      - name: Install backend deps
+        run: npm ci
+        working-directory: backend
+
+      - name: Lint backend
+        run: npm run lint
+        working-directory: backend
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 2: Unit tests (frontend)
+  # ─────────────────────────────────────────────────────────────────
+  test-frontend:
+    name: Unit Tests (Frontend)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+        working-directory: frontend
+
+      - name: Run Vitest with coverage
+        run: npm run test -- --coverage
+        working-directory: frontend
+        env:
+          VITE_API_BASE_URL: http://localhost:8080
+          VITE_FIREBASE_API_KEY: test
+          VITE_FIREBASE_AUTH_DOMAIN: test
+          VITE_FIREBASE_PROJECT_ID: test
+          VITE_FIREBASE_STORAGE_BUCKET: test
+          VITE_FIREBASE_MESSAGING_SENDER_ID: test
+          VITE_FIREBASE_APP_ID: test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 3: Accessibility check (axe-core)
+  # ─────────────────────────────────────────────────────────────────
+  a11y:
+    name: Accessibility Audit (axe-core)
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+        env:
+          VITE_API_BASE_URL: http://localhost:8080
+          VITE_FIREBASE_API_KEY: test-key
+          VITE_FIREBASE_AUTH_DOMAIN: test.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: test-project
+          VITE_FIREBASE_STORAGE_BUCKET: test.appspot.com
+          VITE_FIREBASE_MESSAGING_SENDER_ID: '000000000000'
+          VITE_FIREBASE_APP_ID: '1:000000000000:web:test'
+
+      - name: Serve & run axe audit
+        run: |
+          npx serve -s frontend/dist -p 4173 &
+          sleep 3
+          npx @axe-core/cli http://localhost:4173 --exit
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 4: Production build (validates Vite output)
+  # ─────────────────────────────────────────────────────────────────
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: [lint, test-frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build
+        run: npm run build
+        working-directory: frontend
+        env:
+          VITE_API_BASE_URL: https://ecoquest-backend-xyz.run.app
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 5: Docker build (validates Dockerfile)
+  # ─────────────────────────────────────────────────────────────────
+  build-backend-docker:
+    name: Build Backend Docker Image
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: false
+          tags: ecoquest-backend:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
