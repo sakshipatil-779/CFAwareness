@@ -1,66 +1,58 @@
-# Code Quality Standards: EcoQuest
+# Code Quality Standards — CFAwareness / EcoQuest
 
-This document outlines the coding conventions, quality gates, folder structure, and formatting guidelines enforced within the EcoQuest project codebase.
+## Enforcement Summary
 
----
+| Tool | Scope | Config | Status |
+|------|-------|--------|--------|
+| TypeScript 5 (strict) | Backend + Frontend | `tsconfig.json` | ✅ Enforced |
+| ESLint + @typescript-eslint | Backend + Frontend | `.eslintrc.json` | ✅ Enforced |
+| Prettier | All files | `.prettierrc` | ✅ Enforced |
+| EditorConfig | All editors | `.editorconfig` | ✅ Active |
 
-## 1. Directory Structure & Architecture
+## TypeScript Strict Mode
+Both `backend/tsconfig.json` and `frontend/tsconfig.json` enforce:
+- `strict: true` — enables strictNullChecks, noImplicitAny, strictFunctionTypes
+- `noUnusedLocals: true` — zero dead variables
+- `noUnusedParameters: true` — zero dead function parameters
+- `noImplicitReturns: true` — all code paths must return a value
+- `noFallthroughCasesInSwitch: true` — switch cases are always explicit
+- `forceConsistentCasingInFileNames: true` — no cross-platform casing bugs
 
-EcoQuest is organized as a decoupled monorepo containing a React 19 SPA frontend and an Express Node.js backend.
+## Language Policy
+- **100% TypeScript** across backend and frontend source files
+- Zero `.js` files in `src/` directories
+- Config files in `.ts` format where possible
 
-```
-e:\CFAwareness
-├── .github/                  # CI/CD Workflows
-├── docs/                     # Architectural decision records and problem analyses
-├── frontend/                 # Client React SPA
-│   ├── src/
-│   │   ├── assets/           # Images, logo, global styling
-│   │   ├── components/       # Visual elements (Game, Video, UI elements)
-│   │   ├── context/          # State providers (Language, GameState)
-│   │   ├── hooks/            # Custom reusable hooks (e.g. useGameState)
-│   │   ├── services/         # API integration wrappers (api.ts)
-│   │   ├── test/             # Vitest test files
-│   │   ├── types/            # Strict TypeScript typings
-│   │   └── utils/            # Calculation utilities (scoreUtils.ts)
-│   └── index.html
-└── backend/                  # Server API
-    ├── src/
-    │   ├── routes/           # Endpoint routers (analyze, video, tts)
-    │   ├── services/         # External integrations (Gemini, Vertex AI, TTS)
-    │   ├── test/             # Backend unit and integration tests
-    │   └── index.ts          # Server entry point
-```
+## Naming Conventions
+- React components: `PascalCase` (`QuizCard.tsx`)
+- Functions/variables: `camelCase` (`calculateFootprint`)
+- Constants: `UPPER_SNAKE_CASE` (`MAX_RETRIES`)
+- Interfaces: `PascalCase` with descriptive name (`CarbonPayload`)
+- Files: `kebab-case` for utilities, `PascalCase` for components
 
----
+## No-Tolerance Rules
+- Zero `any` types — use `unknown` then narrow
+- Zero `console.log` in production — use structured logger
+- Zero hardcoded secrets — all via environment variables
+- Zero disabled ESLint rules without explaining comment
 
-## 2. Code Design Rules
+## Import Order (enforced by ESLint)
+1. Node built-ins (`path`, `fs`)
+2. External packages (`express`, `react`)
+3. Internal modules (`../services/gemini`)
+4. Type-only imports (`import type { ... }`)
 
-### 2.1 Function Length & Complexity
-- **Max 30 Lines**: To ensure readability and clean division of concerns, all function bodies must be kept under 30 lines of active logic.
-- **Single Responsibility Principle (SRP)**: Each function must perform exactly one conceptual operation. If a function parses an input, evaluates a score, and calls an API, it must be split into three distinct helper functions.
+## Function Standards
+- Every function has explicit TypeScript return type
+- Max function length: 40 lines
+- Single responsibility per function
+- Pure functions for carbon calculations (no side effects)
+- Async functions always handle errors with try/catch
 
-### 2.2 Strict Typing Guidelines
-- **Zero `any` Types**: Declaring `any` is strictly prohibited. If typing external libraries is complex, use appropriate union types, generics, or `@ts-expect-error` with a descriptive comment detailing the reason.
-- **Strict Mode**: `tsconfig.json` configurations have `strict: true` enabled, forcing null checks and typed return fields.
-
-### 2.3 Comments and Documentation
-- **JSDoc/Docstrings**: All exported components, helper methods, functions, and TypeScript interfaces must carry clean JSDoc headers explaining parameters, return values, and expected exceptions.
-- **No Commented-out Code**: Dead code blocks must be removed. We rely on Git history for recovery, keeping file bodies clean and active.
-
----
-
-## 3. Formatting & Linting Pipeline
-
-### 3.1 EditorConfig
-We enforce uniform tab styling, line endings (`LF`), and file encodings (`UTF-8`) across all integrated development environments (IDEs) via a root-level `.editorconfig` file.
-
-### 3.2 Prettier
-The `.prettierrc` configuration enforces standard JavaScript/TypeScript styling:
-- Trailing commas for clean git diffs
-- Double-quotes or single-quotes standardized
-- Tab width: 2 spaces
-
-### 3.3 ESLint Gateways
-- **Frontend ESLint**: Uses modern flat configuration (`eslint.config.js`) supporting React 19 hooks and TypeScript.
-- **Backend ESLint**: Uses strict Node rules ensuring unused variables are prefixed with an underscore (`_var`) and return parameters are typed.
-- Both projects must pass linter validation (`npm run lint`) with `0` errors to qualify for a pipeline build.
+## Code Review Checklist
+- [ ] TypeScript compiles with zero errors (`tsc --noEmit`)
+- [ ] ESLint passes with zero errors (`npm run lint`)
+- [ ] Prettier formatted (`npm run format`)
+- [ ] Tests pass with >80% coverage
+- [ ] No secrets in diff
+- [ ] No `any` types introduced

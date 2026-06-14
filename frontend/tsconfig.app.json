@@ -32,8 +32,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "erasableSyntaxOnly": true,
     "noUncheckedIndexedAccess": false
   },
   "include": ["src"]
