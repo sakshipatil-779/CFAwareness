@@ -59,13 +59,17 @@ translateRouter.post('/', async (req, res) => {
     const location = 'global';
     const parent   = `projects/${projectId}/locations/${location}`;
 
-    const [response] = await client.translateText({
+    const requestParams: Parameters<typeof client.translateText>[0] = {
       parent,
       contents:           [text],
       mimeType:           'text/plain',
-      sourceLanguageCode: sourceLanguage ? LANG_CODE[sourceLanguage] : undefined,
       targetLanguageCode: LANG_CODE[targetLanguage],
-    });
+    };
+    if (sourceLanguage) {
+      requestParams.sourceLanguageCode = LANG_CODE[sourceLanguage];
+    }
+
+    const [response] = await client.translateText(requestParams);
 
     const translation = response.translations?.[0];
     res.json({

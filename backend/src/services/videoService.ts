@@ -60,7 +60,7 @@ let _genAI: GoogleGenAI | null = null;
 function getStorage(): Storage | null {
   if (_storage) return _storage;
   try {
-    _storage = new Storage({ projectId: GCP_PROJECT || undefined });
+    _storage = new Storage(GCP_PROJECT ? { projectId: GCP_PROJECT } : {});
     return _storage;
   } catch (err) {
     console.warn('[videoService] GCS client init failed:', (err as Error).message);
@@ -235,7 +235,7 @@ async function generateVeoVideo(
         return fallback;
       }
       await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS));
-      operation = await operation.refresh();
+      operation = await operation.refresh() as typeof operation;
       console.log(`[videoService] Veo: polling… done=${operation.done}`);
     }
 
@@ -248,7 +248,7 @@ async function generateVeoVideo(
 
     const videoBytes = generatedVideos[0];
     const videoBuffer = Buffer.from(
-      typeof videoBytes === 'string' ? videoBytes : videoBytes.data ?? videoBytes,
+      typeof videoBytes === 'string' ? videoBytes : ((videoBytes as { data?: string }).data ?? (videoBytes as string)),
       'base64',
     );
 
