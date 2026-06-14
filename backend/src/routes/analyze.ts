@@ -7,7 +7,7 @@ import { LRUCache } from 'lru-cache';
 export const analyzeRouter = Router();
 
 // ── In-Memory Cache ─────────────────────────────────────────────────────────────
-const analysisCache = new LRUCache<string, any>({
+const analysisCache = new LRUCache<string, unknown>({
   max: 500,
   ttl: 1000 * 60 * 60, // 1 hour
 });

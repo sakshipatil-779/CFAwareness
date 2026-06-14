@@ -213,8 +213,8 @@ async function generateVeoVideo(
 
   try {
     // Submit generation request — returns a long-running operation
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let operation: any = await (genAI.models as any).generateVideos({
+    // Type definitions for Veo generation are incomplete in this SDK version
+    let operation = await (genAI.models as unknown as Record<string, Function>).generateVideos({
       model: VEO_MODEL,
       prompt: veoPrompt.text,
       config: {
@@ -223,9 +223,9 @@ async function generateVeoVideo(
         resolution: '1080p',
         numberOfVideos: 1,
         generateAudio: false, // We supply our own TTS audio
-        compressionQuality: 'best' as any,
+        compressionQuality: 'best' as unknown,
       },
-    });
+    }) as { done: boolean, refresh: () => Promise<unknown>, response?: { generatedVideos?: unknown[] } };
 
     // Poll until complete or timeout
     const deadline = Date.now() + VEO_TIMEOUT_MS;
@@ -239,8 +239,8 @@ async function generateVeoVideo(
       console.log(`[videoService] Veo: polling… done=${operation.done}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const generatedVideos: any[] = operation.response?.generatedVideos ?? [];
+    const operationRefreshed = operation as { done: boolean, refresh: () => Promise<unknown>, response?: { generatedVideos?: unknown[] } };
+    const generatedVideos = operationRefreshed.response?.generatedVideos ?? [];
     if (generatedVideos.length === 0) {
       console.error('[videoService] Veo: no videos in response');
       return fallback;
