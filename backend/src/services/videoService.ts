@@ -214,7 +214,7 @@ async function generateVeoVideo(
   try {
     // Submit generation request — returns a long-running operation
     // Type definitions for Veo generation are incomplete in this SDK version
-    let operation = await (genAI.models as unknown as Record<string, Function>).generateVideos({
+    let operation = await (genAI.models as unknown as Record<string, (args: unknown) => unknown>).generateVideos({
       model: VEO_MODEL,
       prompt: veoPrompt.text,
       config: {
